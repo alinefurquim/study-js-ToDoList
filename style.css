@@ -100,9 +100,10 @@ body {
 .todo-new-item > input {
     background-color: #fff59d;
     border: none;
-    width: 80px;
+    width: 80%;
     outline: none;
     font: inherit;
+    
 }
 
 .todo-new-item > input::placeholder {
