@@ -1,7 +1,10 @@
-let database = [
-    {'task': 'Estudar JS', 'status': ''},
-    {'task': 'Netflix', 'status': 'checked'}
-]
+// let database = [
+//     {'task': 'Estudar JS', 'status': ''},
+//     {'task': 'Netflix', 'status': 'checked'}
+// ];
+
+const getDatabase = () => JSON.parse(localStorage.getItem('todoList')) ?? [];
+const setDatabase = (database) => localStorage.setItem('todoList', JSON.stringify(database))
 
 const createItem = (task, status, index) => {
     const item = document.createElement('label');
@@ -24,21 +27,44 @@ const taskClean = () => {
 
 const render = () => {
     taskClean();
+    const database = getDatabase();
     database.forEach((item, index) => createItem(item.task, item.status, index));
 }
 
 const insertItem = (event) => {
-    const screen = event.key;
+    const key = event.key;
     const text = event.target.value;
-    if(screen === 'Enter') {
+    if(key === 'Enter') {
+       const database = getDatabase();
        database.push({'task': text, 'status': ''}); 
+       setDatabase(database);
        render();
+       event.target.value = '';
     }
+}
+const removeItem = (index) => {
+    const database = getDatabase();
+    database.splice (index, 1);
+    setDatabase(database);
+    render();
+}
+
+const renderItem = (index) => {
+    const database = getDatabase();
+    database[index].status = database[index].status === '' ? 'checked' : '';
+    setDatabase(database);
+    render();
 }
 
 const clickItem = (event) => {
     const element = event.target;
-    console.log (element)
+    if (element.type === 'button') {
+        const index = element.dataset.index;
+        removeItem(index);
+    } else if (element.type === 'checkbox') {
+        const index = element.dataset.index;
+        renderItem(index);
+    }
 }
 
 document.getElementById('newItem').addEventListener('keypress', insertItem);
